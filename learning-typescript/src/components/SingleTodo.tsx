@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -6,7 +6,9 @@ import IconButton from '@mui/material/IconButton';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
+import Input from '@mui/material/Input';
 import { Todo } from '../model';
+import TodoList from './TodoList';
 
 type Props = {
 	todo: Todo;
@@ -15,6 +17,11 @@ type Props = {
 };
 
 const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }: Props) => {
+	const [edit, setEdit] = useState<boolean>(false);
+	const [editTodo, setEditTodo] = useState<string>(todo.todo);
+	const todoEditHandler = (isDone: boolean) => {
+		if (!isDone && !edit) setEdit(!edit);
+	};
 	const todoDoneHandler = (id: number) => {
 		setTodos(
 			todos.map((todo) =>
@@ -31,12 +38,29 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }: Props) => {
 	const todoDeleteHandler = (id: number) => {
 		setTodos(todos.filter((todo) => todo.id !== id));
 	};
+
+	const todoSubmitHandler = (e: React.KeyboardEvent, id: number) => {
+		console.log(e.key);
+		if (e.key === 'Enter') {
+			setTodos(
+				todos.map((todo) =>
+					todo.id === id ? { ...todo, todo: editTodo } : todo
+				)
+			);
+			setEdit(!edit);
+		}
+	};
 	return (
 		<ListItem
 			key={todo.id}
 			secondaryAction={
 				<>
-					<IconButton edge="end" aria-label="edit">
+					<IconButton
+						edge="end"
+						aria-label="edit"
+						onClick={() => {
+							todoEditHandler(todo.isDone);
+						}}>
 						<EditOutlinedIcon />
 					</IconButton>
 					<IconButton
@@ -57,10 +81,21 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }: Props) => {
 					</IconButton>
 				</>
 			}>
-			<ListItemText
-				primary={todo.todo}
-				secondary={todo.isDone ? 'Done' : 'Not yet done'}
-			/>
+			{edit ? (
+				<Input
+					value={editTodo}
+					placeholder={todo.todo}
+					onKeyPress={(e) => todoSubmitHandler(e, todo.id)}
+					onChange={(e) => {
+						setEditTodo(e.target.value);
+					}}
+				/>
+			) : (
+				<ListItemText
+					primary={todo.todo}
+					secondary={todo.isDone ? 'Done' : 'Not yet done'}
+				/>
+			)}
 		</ListItem>
 	);
 };
