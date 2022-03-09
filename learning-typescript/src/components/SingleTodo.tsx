@@ -27,20 +27,29 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }: Props) => {
 			)
 		);
 	};
+
+	const todoDeleteHandler = (id: number) => {
+		setTodos(todos.filter((todo) => todo.id !== id));
+	};
 	return (
 		<ListItem
 			key={todo.id}
 			secondaryAction={
 				<>
-					<IconButton edge="end" aria-label="delete">
+					<IconButton edge="end" aria-label="edit">
 						<EditOutlinedIcon />
-					</IconButton>
-					<IconButton edge="end" aria-label="delete">
-						<DeleteOutlinedIcon />
 					</IconButton>
 					<IconButton
 						edge="end"
 						aria-label="delete"
+						onClick={() => {
+							todoDeleteHandler(todo.id);
+						}}>
+						<DeleteOutlinedIcon />
+					</IconButton>
+					<IconButton
+						edge="end"
+						aria-label="done"
 						onClick={() => {
 							todoDoneHandler(todo.id);
 						}}>
