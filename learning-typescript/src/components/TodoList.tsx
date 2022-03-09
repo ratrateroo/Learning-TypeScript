@@ -14,10 +14,6 @@ const TodoList: React.FC<Props> = ({ todos, setTodos }: Props) => {
 				{todos.map((todo) => {
 					return (
 						<>
-							<li key={todo.id}>
-								ID: {todo.id} - Todo: {todo.todo} - Done:{' '}
-								{todo.isDone ? 'True' : 'False'}
-							</li>
 							<SingleTodo
 								todo={todo}
 								key={todo.id}

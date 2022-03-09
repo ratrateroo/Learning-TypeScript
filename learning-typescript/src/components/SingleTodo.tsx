@@ -15,8 +15,21 @@ type Props = {
 };
 
 const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }: Props) => {
+	const todoDoneHandler = (id: number) => {
+		setTodos(
+			todos.map((todo) =>
+				todo.id === id
+					? {
+							...todo,
+							isDone: !todo.isDone,
+					  }
+					: todo
+			)
+		);
+	};
 	return (
 		<ListItem
+			key={todo.id}
 			secondaryAction={
 				<>
 					<IconButton edge="end" aria-label="delete">
@@ -25,12 +38,20 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }: Props) => {
 					<IconButton edge="end" aria-label="delete">
 						<DeleteOutlinedIcon />
 					</IconButton>
-					<IconButton edge="end" aria-label="delete">
+					<IconButton
+						edge="end"
+						aria-label="delete"
+						onClick={() => {
+							todoDoneHandler(todo.id);
+						}}>
 						<CheckCircleOutlineOutlinedIcon />
 					</IconButton>
 				</>
 			}>
-			SingleTodo
+			<ListItemText
+				primary={todo.todo}
+				secondary={todo.isDone ? 'Done' : 'Not yet done'}
+			/>
 		</ListItem>
 	);
 };
