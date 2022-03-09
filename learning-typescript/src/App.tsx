@@ -3,6 +3,9 @@ import InputField from './components/InputField';
 import TodoList from './components/TodoList';
 import { Todo } from './model';
 
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+
 const App: React.FC = () => {
 	const [todo, setTodo] = useState<string>('');
 	const [todos, setTodos] = useState<Todo[]>([
@@ -23,13 +26,17 @@ const App: React.FC = () => {
 	};
 	return (
 		<Fragment>
-			<InputField
-				todo={todo}
-				setTodo={setTodo}
-				addTaskHandler={addTaskHandler}
-				clearInputHandler={clearInputHandler}
-			/>
-			<TodoList todos={todos} setTodos={setTodos} />
+			<Box sx={{}}>
+				<Container maxWidth="sm">
+					<InputField
+						todo={todo}
+						setTodo={setTodo}
+						addTaskHandler={addTaskHandler}
+						clearInputHandler={clearInputHandler}
+					/>
+					<TodoList todos={todos} setTodos={setTodos} />
+				</Container>
+			</Box>
 		</Fragment>
 	);
 };

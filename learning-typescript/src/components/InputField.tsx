@@ -26,7 +26,7 @@ const InpurField: React.FC<Props> = ({
 				p: '2px 4px',
 				display: 'flex',
 				alignItems: 'center',
-				width: 400,
+				width: '100%',
 			}}>
 			<InputBase
 				sx={{ ml: 1, flex: 1 }}
