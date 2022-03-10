@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -7,7 +7,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import Input from '@mui/material/Input';
-import { Todo } from '../model';
+import { Todo, TodoActionKind, todoReducer, TodoAction } from '../model';
 import TodoList from './TodoList';
 
 type Props = {
@@ -16,19 +16,31 @@ type Props = {
 	setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 };
 
+const initializer = () => {
+	return { id: 0, todo: '', isDone: false };
+};
+
 const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }: Props) => {
 	const [edit, setEdit] = useState<boolean>(false);
 	const [editTodo, setEditTodo] = useState<string>(todo.todo);
+
+	const [state, dispatch] = useReducer(todoReducer, { todos });
+
 	const todoEditHandler = (isDone: boolean, id: number) => {
 		!isDone && !edit
 			? setEdit(!edit)
-			: setTodos(
-					todos.map((todo) =>
-						todo.id === id ? { ...todo, todo: editTodo } : todo
-					)
-			  );
+			: // setTodos(
+			  // 		todos.map((todo) =>
+			  // 			todo.id === id ? { ...todo, todo: editTodo } : todo
+			  // 		)
+			  //   );
+			  dispatch({
+					type: TodoActionKind.EDIT,
+					payload: { id: id, isDone: isDone, todo: todo.todo },
+			  });
 		setEdit(!edit);
 	};
+
 	const todoDoneHandler = (id: number) => {
 		if (!edit) {
 			setTodos(
